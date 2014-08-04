@@ -1,0 +1,8 @@
+# OS X specific ignores
+.DS_Store
+
+# Node modules
+node_modules
+
+# NPM
+npm_debug.log

@@ -1,15 +1,3 @@
-##Overview
-
-Simple xAPI wrapper for Node.js written in Coffeescript.
-
-##Prerequisites
-
-Node version 0.10 or higher (testes on Node v0.10.30)
-
-##Instalation
-
-`npm install`
-
 ##Example usage
 
 This is a simple example showing how to connect and use the api wrapper.
@@ -22,7 +10,7 @@ The socket provided by xAPI is not certified but for now lets ignore it
 
     process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = '0'
 
-Define some helpful static variables
+Define some helpfull static variables
 
     SERVER_URL = 'xapia.x-station.eu'
     CONN_PORT = '5144' #provide port
@@ -30,7 +18,7 @@ Define some helpful static variables
     USERNAME = '177509' #provide a valid username
     PASSWORD = 'ystk7C' #provide a valid password
 
-Define some helpful helper functions
+Define some helpfull helper functions
 
     print = (msg) ->
       console.log(msg + '\n')

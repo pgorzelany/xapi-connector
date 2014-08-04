@@ -1,0 +1,29 @@
+{
+  "name": "xapi-connector",
+  "description": "Simple wrapper for xAPI written in Coffeescript",
+  "keywords": [
+    "xAPI"
+  ],
+  "author": "Piotr Gorzelany",
+  "version": "0.1.0",
+  "license": "MIT",
+  "engines": {
+    "node": ">=0.10.0"
+  },
+  "main": "./lib/xapi-connector.js",
+  "homepage": "https://github.com/pgorzelany/xapi-connector",
+  "bugs": "https://github.com/pgorzelany/xapi-connector/issues",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/pgorzelany/xapi-connector"
+  },
+  "dependencies": {
+    "coffee-script": "*",
+    "moment": "*",
+    "colors": "*"
+  },
+  "scripts": {
+    "preinstall": "coffee -o lib/ -c src/ &",
+    "start": "node ./lib/example.js"
+  }
+}
