@@ -1,7 +1,6 @@
 #Copyright (c) Piotr Gorzelany 2014
 
 tls = require('tls')
-moment = require('moment')
 dispatcher = require('./dispatcher.js')
 
 print = (msg) ->

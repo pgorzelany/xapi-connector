@@ -1,6 +1,6 @@
 ##Overview
 
-Simple xAPI wrapper for Node.js written in Coffeescript.
+Simple xAPI 3.0 wrapper for [Node.js](http://nodejs.org/) written in [Coffeescript](http://coffeescript.org/).
 
 ##Prerequisites
 
@@ -153,6 +153,10 @@ We will logout and close the connections after 20 sec
       api.conn.send(api.buildCommand('logout', null, 'logout'))
     ,20000)
 
-You don't have to follow the approach presented in this example and you can play with the Connector to search for your own stile.
+This example is provided with this module, just run:
+
+`node ./lib/example.js`
+
+You don't have to follow the approach presented in this example and you can play with the Connector to search for your own style.
 
 Have fun!
