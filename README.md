@@ -1,6 +1,6 @@
 ##Overview
 
-Simple xAPI 3.0 wrapper for [Node.js](http://nodejs.org/) written in [Coffeescript](http://coffeescript.org/).
+Simple [xAPI 3.0](http://developers.xstore.pro/) wrapper for [Node.js](http://nodejs.org/) written in [Coffeescript](http://coffeescript.org/).
 
 ##Prerequisites
 
@@ -157,6 +157,6 @@ This example is provided with this module, just run:
 
 `node ./lib/example.js`
 
-You don't have to follow the approach presented in this example and you can play with the Connector to search for your own style.
+You don't have to follow the approach presented in this example and you can play with the xapi-connector to search for your own style.
 
 Have fun!
