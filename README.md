@@ -8,7 +8,7 @@ Node version 0.10 or higher (testes on Node v0.10.30)
 
 ##Instalation
 
-`npm install`
+`npm install xapi-connector`
 
 ##Example usage
 
