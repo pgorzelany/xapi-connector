@@ -5,4 +5,4 @@
 node_modules
 
 # NPM
-npm_debug.log
+npm-debug.log
