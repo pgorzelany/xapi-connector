@@ -143,7 +143,3 @@ We will logout and close the connections after 10 sec
     setTimeout(() ->
       api.conn.send(api.buildCommand('logout', null, 'logout'))
     ,10000)
-
-You don't have to follow the approach presented in this example and you can play with the Connector to search for your own stile.
-
-Have fun!
