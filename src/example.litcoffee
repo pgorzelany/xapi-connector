@@ -34,18 +34,20 @@ We will then define what to do when we receive a message.
 
     api.onOpen = (msg) ->
       c.debug('Successfuly connected to market server, login in.')
-      api.conn.send(api.buildCommand('login', {userId: api.username, password: api.password}, 'login'))
+      api.conn.send(api.buildCommand('login', {userId: api.username, password: api.password}))
       return
 
     ###lets just forward the message to an appropriate handler defined later
-    we will use the customTag to know which handler we should forward to###
+    we will use the customTag to know which handler we should forward to
+    this module by default builds a custom tag so that it has a unique ID
+    and a command property###
 
     api.onMessage = (msg) ->
       c.debug("Received a  message, #{msg}")
       msg = JSON.parse(msg)
-      c.debug("Received response to command: #{msg.customTag}")
-      if api.handlers[msg.customTag]?
-        api.handlers[msg.customTag](msg)
+      c.debug("Received response to command: #{@env.messages[msg.customTag].command}")
+      if api.handlers[@env.messages[msg.customTag].command]?
+        api.handlers[@env.messages[msg.customTag].command](msg)
       else
         throw new Error('There is no handler for this msg')
       return
@@ -70,7 +72,7 @@ We will wait for confirmation on successful login and then send a command to che
           #save the stream_session_id in the environment object
           api.env.stream_session_id = msg.streamSessionId
           c.debug('The login was succesfull. Lets check if the API version is 3.0')
-          api.conn.send(api.buildCommand('getVersion', null, 'getVersion'))
+          api.conn.send(api.buildCommand('getVersion', null))
         else
           c.debug('There was an error login in')
         return
@@ -141,5 +143,5 @@ We will logout and close the connections after 10 sec
 
     api.connect()
     setTimeout(() ->
-      api.conn.send(api.buildCommand('logout', null, 'logout'))
+      api.conn.send(api.buildCommand('logout', null))
     ,10000)
