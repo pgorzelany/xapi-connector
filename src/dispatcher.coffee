@@ -28,8 +28,11 @@ class Dispatcher
       d.debug("Sending message: #{msg = @que.shift()} \n")
       @stream.write(msg)
       @last = new Date().getTime()
-      if diff > @delay then @sins -= 1 else @sins += 1
-      if @que.length > 0 then @clearQue().bind(@) else @clearing_que = false
+      if diff > @delay
+        @sins -= 1 if @sins > 0 #substract a sin but not below 0
+      else
+        @sins += 1
+      if @que.length > 0 then @clearQue() else @clearing_que = false
     else
       setTimeout(@clearQue.bind(@), @delay + 1 - diff)
 
