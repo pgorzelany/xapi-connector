@@ -14,7 +14,7 @@ Debugger = require('debug-js')
 d = new Debugger('Dispatcher', 'green')
 
 class Dispatcher
-  constructor: (@stream, @delay = 0, @que = [], @last = 0, @clearing_que = false, @max_sins = 5) ->
+  constructor: (@stream, @delay = 0, @que = [], @last = 0, @clearing_que = false, @max_sins = 0) ->
     @sins = 0
 
   add: (msg) ->
