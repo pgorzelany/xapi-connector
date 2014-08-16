@@ -36,7 +36,7 @@ class Connector
     #establish tls connection and handlers
     @conn = tls.connect(@conn_port, @server_url, @onOpen)
     @conn.setEncoding('utf-8')
-    @conn.dispatcher = new dispatcher(@conn, 205)
+    @conn.dispatcher = new dispatcher(@conn, 200)
     @conn.send = (msg) =>
       @conn.dispatcher.add(msg)
     @conn.addListener('data', @onChunk)
@@ -62,7 +62,7 @@ class Connector
   connectStream: () ->
     @stream = tls.connect(@stream_port, @server_url, @onStreamOpen)
     @stream.setEncoding('utf-8')
-    @stream.dispatcher = new dispatcher(@stream, 205)
+    @stream.dispatcher = new dispatcher(@stream, 200)
     @stream.send = (msg) =>
       @stream.dispatcher.add(msg)
     @stream.addListener('data', @onStreamChunk)

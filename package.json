@@ -5,7 +5,7 @@
     "xAPI"
   ],
   "author": "Piotr Gorzelany",
-  "version": "0.3.4",
+  "version": "0.3.5",
   "license": "MIT",
   "engines": {
     "node": ">=0.10.0"
