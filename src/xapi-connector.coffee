@@ -10,6 +10,8 @@ print = (msg) ->
 
 class Connector
   constructor: (@server_url, @conn_port, @stream_port, @username, @password) ->
+    @conn = {}
+    @stream = {}
     @msg = '' #this is required since data comes in chunks
     @msg_id = 0 #this will be used to uniquely identify a message
     @stream_msg = '' #this is for the stream
@@ -34,14 +36,16 @@ class Connector
 
   connect: () ->
     #establish tls connection and handlers
-    @conn = tls.connect(@conn_port, @server_url, @onOpen)
-    @conn.setEncoding('utf-8')
-    @conn.dispatcher = new dispatcher(@conn, 200)
+    @conn._socket = tls.connect(@conn_port, @server_url, @onOpen)
+    @conn._socket.setEncoding('utf-8')
+    @conn.dispatcher = new dispatcher(@conn._socket, 200)
     @conn.send = (msg) =>
       @conn.dispatcher.add(msg)
-    @conn.addListener('data', @onChunk)
-    @conn.addListener('error', @onError)
-    @conn.addListener('close', @onClose)
+    @conn._socket.addListener('data', @onChunk)
+    @conn._socket.addListener('error', @onError)
+    @conn._socket.addListener('close', @onClose)
+    @conn.end = () =>
+      @conn._socket.end()
     return
 
   onChunk: (data) =>
@@ -59,15 +63,21 @@ class Connector
         @msg = ''
     return
 
+  disconnect: () ->
+    @conn.end()
+    return
+
   connectStream: () ->
-    @stream = tls.connect(@stream_port, @server_url, @onStreamOpen)
-    @stream.setEncoding('utf-8')
-    @stream.dispatcher = new dispatcher(@stream, 200)
+    @stream._socket = tls.connect(@stream_port, @server_url, @onStreamOpen)
+    @stream._socket.setEncoding('utf-8')
+    @stream.dispatcher = new dispatcher(@stream._socket, 200)
     @stream.send = (msg) =>
       @stream.dispatcher.add(msg)
-    @stream.addListener('data', @onStreamChunk)
-    @stream.addListener('error', @onStreamError)
-    @stream.addListener('close', @onStreamClose)
+    @stream._socket.addListener('data', @onStreamChunk)
+    @stream._socket.addListener('error', @onStreamError)
+    @stream._socket.addListener('close', @onStreamClose)
+    @stream.end = () =>
+      @stream._socket.end()
     return
 
   onStreamChunk: (data) =>
@@ -84,6 +94,10 @@ class Connector
         @onStreamMessage(@stream_msg)
         @stream_msg = ''
     return
+
+    disconnectStream: () ->
+      @stream.end()
+      return
 
     #fill in onOpen, onMessage, onStreamOpen, onStreamMessage, onError and onStreamError handlers
 
