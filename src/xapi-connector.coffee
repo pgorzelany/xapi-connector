@@ -23,7 +23,9 @@ class Connector
     com =
       command: if command? then command else throw new Error('Missing command')
       arguments: args if args?
+    #myCustomTag = JSON.stringify(com)
     if tag? then com.customTag = tag else com.customTag = @msg_id.toString()
+    #if tag? then com.customTag = tag else com.customTag = myCustomTag
     @env.messages[@msg_id] = com #save the message and its id to the environment object
     return JSON.stringify(com)
 
@@ -40,11 +42,13 @@ class Connector
     @conn._socket.setEncoding('utf-8')
     @conn.dispatcher = new dispatcher(@conn._socket, 200)
     @conn.send = (msg) =>
+      #console.log("Sending message: #{msg}")
       @conn.dispatcher.add(msg)
     @conn._socket.addListener('data', @onChunk)
     @conn._socket.addListener('error', @onError)
     @conn._socket.addListener('close', @onClose)
     @conn.end = () =>
+      @stream._socket.end() if @stream._socket?
       @conn._socket.end()
     return
 
@@ -72,6 +76,7 @@ class Connector
     @stream._socket.setEncoding('utf-8')
     @stream.dispatcher = new dispatcher(@stream._socket, 200)
     @stream.send = (msg) =>
+      console.log("Sending message: #{msg}")
       @stream.dispatcher.add(msg)
     @stream._socket.addListener('data', @onStreamChunk)
     @stream._socket.addListener('error', @onStreamError)
@@ -95,9 +100,18 @@ class Connector
         @stream_msg = ''
     return
 
-    disconnectStream: () ->
-      @stream.end()
-      return
+  disconnectStream: () ->
+    @stream.end()
+    return
+
+  resetState: () ->
+    @conn = {}
+    @stream = {}
+    @msg = '' #this is required since data comes in chunks
+    @msg_id = 0 #this will be used to uniquely identify a message
+    @stream_msg = '' #this is for the stream
+    @env =
+      messages: {}
 
     #fill in onOpen, onMessage, onStreamOpen, onStreamMessage, onError and onStreamError handlers
 
