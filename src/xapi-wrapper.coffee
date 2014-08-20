@@ -17,6 +17,10 @@ class Wrapper extends Connector
   onOpen: () =>
     @env.conn_status = true
     @env.last_conn = new Date().getTime()
+    @monitorConn()
+    @on('ping', () =>
+      @env.last_ping = new Date().getTime()
+      )
     @handlers.open() if @handlers.open?
     return
 
@@ -28,7 +32,8 @@ class Wrapper extends Connector
       else
         @onApiError(msg)
     else
-      throw new Error("There is no handler for the message")
+      err_msg = "There is no handler for response to command: #{@env.messages[msg.customTag].command}"
+      throw new Error(err_msg)
     return
 
   onError: (err) =>
@@ -36,6 +41,22 @@ class Wrapper extends Connector
     @env.conn_status = false
     console.log(err)
     @reconnect()
+    return
+
+  monitorConn: (timeout) ->
+    now = new Date().getTime()
+    timeout ?= 0
+    if now - @env.last_ping <= timeout or @env.last_ping == undefined
+      #console.log("Sedning ping")
+      @ping()
+      @last_ping = new Date().getTime()
+      timeout = @conn.dispatcher.que.length * @conn.dispatcher.delay + 3000
+      setTimeout(() =>
+          @monitorConn(timeout)
+        ,timeout)
+    else
+      @disconnect()
+      @reconnect()
     return
 
   reconnect: () ->
@@ -59,7 +80,8 @@ class Wrapper extends Connector
     if @stream_handlers[msg.command]?
       @stream_handlers[msg.command](msg)
     else
-      throw new Error('There is no handler for this msg')
+      err_msg = "There is no handler for response to stream command: #{msg.command}"
+      throw new Error(err_msg)
     return
 
   onStreamOpen: () =>
@@ -144,6 +166,10 @@ class Wrapper extends Connector
 
   getCalendar: (args) ->
     @conn.send(@buildCommand('getCalendar', args))
+    return
+
+  getCandles: (args) ->
+    @conn.send(@buildCommand('getCandles', args))
     return
 
   getCashOperationsHistory: (args) ->

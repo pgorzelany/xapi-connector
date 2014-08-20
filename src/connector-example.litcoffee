@@ -2,10 +2,9 @@
 
 This is a simple example showing how to connect and use the api wrapper.
 
-Import the xapi-connector and debug-js for easier debuging
+Import the xapi-connector
 
     Connector = require('./xapi-connector.js')
-    Debugger = require('debug-js')
 
 The socket provided by xAPI is not certified but for now lets ignore it
 
@@ -19,10 +18,10 @@ Define some helpfull static variables
     USERNAME = '177509' #provide a valid username
     PASSWORD = 'ystk7C' #provide a valid password
 
-Create debuggers
+Helper functions
 
-    s = new Debugger('Stream', 'blue') #debugger for stream
-    c = new Debugger('Conn', 'yellow') #debugger for normal connection
+    print = (msg) ->
+      console.log(msg)
 
 Create new API connector
 
@@ -33,7 +32,7 @@ For the sake of this example, we will login to the provided account once the con
 We will then define what to do when we receive a message.
 
     api.onOpen = (msg) ->
-      c.debug('Successfuly connected to market server, login in.')
+      print('Successfuly connected to market server, login in.')
       api.conn.send(api.buildCommand('login', {userId: api.username, password: api.password}))
       return
 
@@ -43,9 +42,9 @@ We will then define what to do when we receive a message.
     and a command property###
 
     api.onMessage = (msg) ->
-      c.debug("Received a  message, #{msg}")
+      print("Received a  message, #{msg}")
       msg = JSON.parse(msg)
-      c.debug("Received response to command: #{@env.messages[msg.customTag].command}")
+      print("Received response to command: #{@env.messages[msg.customTag].command}")
       if api.handlers[@env.messages[msg.customTag].command]?
         api.handlers[@env.messages[msg.customTag].command](msg)
       else
@@ -53,11 +52,11 @@ We will then define what to do when we receive a message.
       return
 
     api.onError = (err) ->
-      c.debug(err)
+      print(err)
       return
 
     api.onClose = () ->
-      c.debug('Successfuly closed the connection')
+      print('Successfuly closed the connection')
       return
 
 Since the connector is asynchronous, we have to make sure that we are sending commands in the right order.
@@ -67,29 +66,29 @@ We will wait for confirmation on successful login and then send a command to che
     api.handlers =
       #handler for the login response
       login: (msg) =>
-        c.debug('Entering login handler')
+        print('Entering login handler')
         if msg.status == true
           #save the stream_session_id in the environment object
           api.env.stream_session_id = msg.streamSessionId
-          c.debug('The login was succesfull. Lets check if the API version is 3.0')
+          print('The login was succesfull. Lets check if the API version is 3.0')
           api.conn.send(api.buildCommand('getVersion', null))
         else
-          c.debug('There was an error login in')
+          print('There was an error login in')
         return
 
       #handler for the getVersion response
       getVersion: (msg) =>
-        c.debug('Entering getVersion handler')
+        print('Entering getVersion handler')
         if msg.returnData.version == '3.0'
-          c.debug('The API version is OK. Now lets connect to the stream')
+          print('The API version is OK. Now lets connect to the stream')
           api.connectStream()
         else
-          c.debug('The version of the API has changed. This wrapper is outdated')
+          print('The version of the API has changed. This wrapper is outdated')
         return
 
       #handler for logout rensponse
       logout: (msg) =>
-        c.debug('Entering logout handler, closing sockets')
+        print('Entering logout handler, closing sockets')
         if msg.status == true
           api.conn.end()
         return
@@ -100,9 +99,9 @@ Notice that we send the getAllSymbols command only after we made sure that our l
 Lets now define the neccesary stream methods. For the sake of this example we will subscribe to indicator and EURUSD tick prices once the stream is open.
 
     api.onStreamOpen = (msg) ->
-      s.debug('Successfuly connected to stream server, subscribing to indicators.')
+      print('Successfuly connected to stream server, subscribing to indicators.')
       api.stream.send(api.buildStreamCommand("getAccountIndicators", api.env.stream_session_id))
-      s.debug('Lets also subscribe to EURUSD tick prices')
+      print('Lets also subscribe to EURUSD tick prices')
       api.stream.send(api.buildStreamCommand("getTickPrices", api.env.stream_session_id, ['EURUSD']))
       return
 
@@ -111,7 +110,7 @@ Lets now define the neccesary stream methods. For the sake of this example we wi
 
     api.onStreamMessage = (msg) ->
       msg = JSON.parse(msg)
-      s.debug("Received response to command: #{msg.command}")
+      print("Received response to command: #{msg.command}")
       if api.stream_handlers[msg.command]?
         api.stream_handlers[msg.command](msg)
       else
@@ -119,11 +118,11 @@ Lets now define the neccesary stream methods. For the sake of this example we wi
       return
 
     api.onStreamError = (err) ->
-      s.debug(err)
+      print(err)
       return
 
     api.onStreamClose = () ->
-      s.debug('Successfuly closed the stream')
+      print('Successfuly closed the stream')
       return
 
 Lets create the stream_handler object and its methods to which we are forwarding our stream messages.
@@ -131,11 +130,11 @@ We can now define how do we want to handle the responses from each command. For 
 
     api.stream_handlers =
       indicators: (msg) =>
-        s.debug(JSON.stringify(msg))
+        print(JSON.stringify(msg))
         return
 
       tickPrices: (msg) =>
-        s.debug(JSON.stringify(msg))
+        print(JSON.stringify(msg))
         return
 
 And there you go. We have connected and issued some commands and handled the responses. Lets connect and run the code!

@@ -76,7 +76,7 @@ class Connector
     @stream._socket.setEncoding('utf-8')
     @stream.dispatcher = new dispatcher(@stream._socket, 200)
     @stream.send = (msg) =>
-      console.log("Sending message: #{msg}")
+      #console.log("Sending message: #{msg}")
       @stream.dispatcher.add(msg)
     @stream._socket.addListener('data', @onStreamChunk)
     @stream._socket.addListener('error', @onStreamError)

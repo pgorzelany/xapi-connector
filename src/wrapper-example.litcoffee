@@ -47,13 +47,13 @@ Add event handlers for the normal connection.
 Add event handlers for stream.
 
     client.onStream('open', () ->
-      console.log("Successfuly connected to stream. Subscribing to EURUSD.")
+      print("Successfuly connected to stream. Subscribing to EURUSD.")
       client.subscribeTickPrices(client.env.stream_session_id, ['EURUSD'])
       )
 
 
     client.onStream('tickPrices', (msg) ->
-      console.log("Received tick prices: #{JSON.stringify(msg.data, null, 4)}")
+      #print("Received tick prices: #{JSON.stringify(msg.data, null, 4)}")
       )
 
 Connect the client.
@@ -61,4 +61,4 @@ Connect the client.
     client.connect()
     setTimeout(()->
         client.logout()
-      ,10000)
+      ,100000)

@@ -5,7 +5,7 @@
     "xAPI"
   ],
   "author": "Piotr Gorzelany",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "license": "MIT",
   "engines": {
     "node": ">=0.10.0"
@@ -18,8 +18,7 @@
     "url": "https://github.com/pgorzelany/xapi-connector"
   },
   "dependencies": {
-    "coffee-script": "*",
-    "debug-js": "*"
+    "coffee-script": "*"
   },
   "scripts": {
     "postinstall": "coffee -o lib/ -c src/",
