@@ -10,4 +10,10 @@ Node version 0.10 or higher (testes on Node v0.10.30)
 
 `npm install xapi-connector`
 
-![](src/wrapper-example.litcoffee)
+##Example wrapper usage
+
+[See wrapper example](src/wrapper-example.litcoffee)
+
+##Example connector usage
+
+[See connector example](src/connector-example.litcoffee)
