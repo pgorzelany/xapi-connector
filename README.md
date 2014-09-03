@@ -20,6 +20,8 @@ Node version 0.10 or higher (testes on Node v0.10.30)
 
 ##Wrapper Docs (Draft)
 
+Notice: This is a DRAFT of how the API should look like, not the actual docs. The API will probably look like this for version 1.0.
+
 ###Class: Wrapper(server_url, conn_port, stream_port, username, password, [options])
 
 The main wrapper class. By using it you initialize the client. Example:
@@ -32,24 +34,53 @@ You can then use the client methods and properties to interact with xapi
 
 ###Client.disconnect()
 
-#Client.send(command, [args])
+###Client.send(command, [args])
 
-#Client.on(event, callback(req, res))
+Available commands:
 
-#Client.connectStream()
+- login
+- logout
+...
 
-#Client.disconnectStream()
+###Client.on(event, callback(req, res))
 
-#Client.subscribe(command, [args])
+Events list:
 
-#Client.unsubscribe(command, [args])
+- open
+- close
+- error
+- login
+- logout
+...
 
-#Client.onStream(even, callback(msg))
+###Client.connectStream()
 
-#Client.conn_status
+###Client.disconnectStream()
 
-#Client.stream_status
+###Client.subscribe(command, [args])
 
-#Client.que
+Available commands:
 
-#Client.session_id
+- tickPrices
+- Indicators
+...
+
+###Client.unsubscribe(command, [args])
+
+Available commands: see the subscribe method above
+
+###Client.onStream(event, callback(msg))
+
+Event list:
+
+- tickPrices
+- Indicators
+...
+
+###Client.conn_status
+
+###Client.stream_status
+
+###Client.que
+
+###Client.session_id
