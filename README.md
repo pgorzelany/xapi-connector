@@ -10,77 +10,78 @@ Node version 0.10 or higher (testes on Node v0.10.30)
 
 `npm install xapi-connector`
 
-##Example wrapper usage
-
-[See wrapper example](src/wrapper-example.litcoffee)
-
 ##Example connector usage
 
 [See connector example](src/connector-example.litcoffee)
 
-##Wrapper Docs (Draft)
+##Connector Docs (Draft)
 
 Notice: This is a DRAFT of how the API should look like, not the actual docs. The API will probably look like this for version 1.0.
 
-###Class: Wrapper(server_url, conn_port, stream_port, username, password, [options])
+###Class: Connector(server_url, conn_port, stream_port, username, password, [options])
 
-The main wrapper class. By using it you initialize the client. Example:
+The main Connector class. By using it you initialize the client. Example:
 
-    client = new Wrapper(SERVER_URL, CONN_PORT, STREAM_PORT, USERNAME, PASSWORD)
+    client = new Connector(SERVER_URL, CONN_PORT, STREAM_PORT, USERNAME, PASSWORD)
 
 You can then use the client methods and properties to interact with xapi
 
 ###Client.connect()
 
+Connects to the specified server and conn port
+
 ###Client.disconnect()
 
-###Client.send(command, [args])
+Disconnects from the server
 
-Available commands:
+###Client.send(msg)
 
-- login
-- logout
-...
+Sends a message through the normal connection
 
-###Client.on(event, callback(req, res))
+###Client.on(event, callback)
 
-Events list:
+Registeres a callback for a given event. You can register multiple callback per event
 
+Events:
 - open
 - close
 - error
-- login
-- logout
-...
+- message
 
 ###Client.connectStream()
 
+Connects to the specified stream server
+
 ###Client.disconnectStream()
 
-###Client.subscribe(command, [args])
+Disconnects from the stream server
 
-Available commands:
+###Client.streamSend(msg)
 
-- tickPrices
-- Indicators
-...
+Sends a message to the stream server
 
-###Client.unsubscribe(command, [args])
+###Client.onStream(event, callback)
 
-Available commands: see the subscribe method above
+Registeres a callback for a given stream event. You can register multiple callback per event
 
-###Client.onStream(event, callback(msg))
+Events:
+- open
+- close
+- error
+- message
 
-Event list:
+###Client.buildCommand(command, [args], [tag])
 
-- tickPrices
-- Indicators
-...
+Helper function for building xAPI compliant commands. Returns a JSON object.
 
-###Client.conn_status
+###Client.buildStreamCommand(command, stream_session_id, [symbols])
 
-###Client.stream_status
+Helper function for building xAPI compliant commands. Returns a JSON object.
 
-###Client.que
+###Client.getQue()
 
-###Client.session_id
+Return the current que of messages to be send by the client
+
+###Client.getStreamQue()
+
+Return the current que of messages to be send by the client stream

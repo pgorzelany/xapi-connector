@@ -1,11 +1,11 @@
 {
   "name": "xapi-connector",
-  "description": "Simple wrapper for xAPI written in Coffeescript",
+  "description": "Simple low level connector for xAPI written in Coffeescript",
   "keywords": [
     "xAPI"
   ],
   "author": "Piotr Gorzelany",
-  "version": "0.6.1",
+  "version": "0.7.0",
   "license": "MIT",
   "engines": {
     "node": ">=0.10.0"
@@ -21,8 +21,6 @@
     "coffee-script": "*"
   },
   "scripts": {
-    "postinstall": "coffee -o lib/ -c src/",
-    "prestart": "coffee -o lib/ -c src/",
-    "start": "node ./lib/example.js"
+    "prepublish": "coffee -o lib/ -c src/"
   }
 }
