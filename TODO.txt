@@ -1,1 +1,2 @@
-- publish the module to npm
+- work on the new api on the new_api branch
+- add constructor params to docs

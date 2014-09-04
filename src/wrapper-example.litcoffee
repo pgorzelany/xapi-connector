@@ -13,8 +13,8 @@ Define statics
     SERVER_URL = 'xapia.x-station.eu'
     CONN_PORT = '5144' #provide port
     STREAM_PORT = '5145' #provide stream port
-    USERNAME = '177509' #provide a valid username
-    PASSWORD = 'ystk7C' #provide a valid password
+    USERNAME = '201870' #provide a valid username
+    PASSWORD = 'rz3smI' #provide a valid password
 
 Helper functions
 
@@ -33,9 +33,9 @@ Add event handlers for the normal connection.
       client.login({userId: client.username, password: client.password})
       )
 
-    client.on('login', (msg) ->
-      print("successfully logged in.")
-      client.env.stream_session_id = msg.streamSessionId
+    client.on('login', (req, res) ->
+      print("successfully logged in. \nreq: #{JSON.stringify(req)} \nres: #{JSON.stringify(res)}")
+      client.env.stream_session_id = res.streamSessionId
       client.connectStream()
       )
 

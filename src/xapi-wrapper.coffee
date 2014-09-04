@@ -1,39 +1,29 @@
 Connector = require('./xapi-connector.js')
+Emitter = require('events').EventEmitter
 
 class Wrapper extends Connector
   constructor: (server_url, conn_port, stream_port, username, password) ->
     super(server_url, conn_port, stream_port, username, password)
-    @handlers = {}
-    @stream_handlers = {}
-    @env =
-      indicators: {}
-      symbols: {}
-      quotes: {}
-      orders: {}
-      trades: {}
-      messages: {}
+    @_emitter = new Emitter()
+    @_stream_emitter = new Emitter()
     return
 
   onOpen: () =>
     @env.conn_status = true
     @env.last_conn = new Date().getTime()
     @monitorConn()
-    @on('ping', () =>
+    @on('ping', (req, res) =>
       @env.last_ping = new Date().getTime()
       )
-    @handlers.open() if @handlers.open?
+    @_emitter.emit('open')
     return
 
   onMessage: (msg) ->
     msg = JSON.parse(msg)
-    if @handlers[@env.messages[msg.customTag].command]?
-      if msg.status == true
-        @handlers[@env.messages[msg.customTag].command](msg)
-      else
-        @onApiError(msg)
+    if msg.status == true
+      @_emitter.emit([@env.messages[msg.customTag].command], @env.messages[msg.customTag], msg)
     else
-      err_msg = "There is no handler for response to command: #{@env.messages[msg.customTag].command}"
-      throw new Error(err_msg)
+      @onApiError(msg)
     return
 
   onError: (err) =>
@@ -123,10 +113,12 @@ class Wrapper extends Connector
     return
 
   on: (event, callback) ->
-    @handlers[event] = callback
+    @_emitter.on(event, callback)
+    return
 
   onStream: (event, callback) ->
-    @stream_handlers[event] = callback
+    @_stream_emitter.on(event, callback)
+    return
 
   login: (args) ->
     @conn.send(@buildCommand('login', args))
