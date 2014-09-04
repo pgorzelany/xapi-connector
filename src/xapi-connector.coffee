@@ -111,6 +111,12 @@ class Connector
     @_streamEmitter.on(event, callback)
     return
 
+  getQue: () ->
+    return @_conn.dispatcher.getQue()
+
+  getStreamQue: () ->
+    return @_stream.dispatcher.getQue()
+
     #fill in onOpen, onMessage, onStreamOpen, onStreamMessage, onError and onStreamError handlers
 
 module.exports = Connector
