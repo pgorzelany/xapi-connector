@@ -56,7 +56,7 @@ Connects to the specified stream server
 
 Disconnects from the stream server
 
-###Connector.streamSend(msg)
+###Connector.sendStream(msg)
 
 Sends a message to the stream server
 

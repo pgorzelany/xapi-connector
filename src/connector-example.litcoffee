@@ -70,7 +70,7 @@ Now lets handle the stream. First register a handler for the 'open' event.
     client.onStream('open', () ->
       print('Successfuly connected to stream, subscribing to indicators')
       msg = client.buildStreamCommand('getAccountIndicators', client.stream_session_id)
-      client.streamSend(msg)
+      client.sendStream(msg)
     )
 
 Now lets handle the incoming messages.
@@ -93,6 +93,7 @@ Connect the client and check the results!
 
     client.connect()
     setTimeout(() ->
+      print('login out')
       msg = client.buildCommand('logout', null, 'logout')
       client.send(msg)
-    ,10000)
+    ,5000)

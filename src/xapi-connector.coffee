@@ -74,7 +74,7 @@ class Connector
       @_streamEmitter.emit('open'))
     @_stream.socket.setEncoding('utf-8')
     @_stream.dispatcher = new dispatcher(@_stream.socket, 200)
-    @streamSend = (msg) =>
+    @sendStream = (msg) =>
       #console.log("Sending message: #{msg}")
       @_stream.dispatcher.add(msg)
     @_stream.socket.addListener('data', @_onStreamChunk)
