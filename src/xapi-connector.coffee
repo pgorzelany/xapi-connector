@@ -2,6 +2,7 @@
 
 tls = require('tls')
 dispatcher = require('./dispatcher.js')
+Emitter = require('events').EventEmitter
 
 print = (msg) ->
   console.log(msg + '\n')
@@ -10,23 +11,20 @@ print = (msg) ->
 
 class Connector
   constructor: (@server_url, @conn_port, @stream_port, @username, @password) ->
-    @conn = {}
-    @stream = {}
-    @msg = '' #this is required since data comes in chunks
-    @msg_id = 0 #this will be used to uniquely identify a message
-    @stream_msg = '' #this is for the stream
-    @env =
-      messages: {}
+    @_msg = '' #this is required since data comes in chunks
+    @_stream_msg = '' #this is for the stream
+    @_conn = {}
+    @_stream = {}
+    @_emitter = new Emitter()
+    @_streamEmitter = new Emitter()
 
   buildCommand: (command, args, tag) ->
-    @msg_id += 1
     com =
       command: if command? then command else throw new Error('Missing command')
       arguments: args if args?
     #myCustomTag = JSON.stringify(com)
-    if tag? then com.customTag = tag else com.customTag = @msg_id.toString()
+    if tag? then com.customTag = tag
     #if tag? then com.customTag = tag else com.customTag = myCustomTag
-    @env.messages[@msg_id] = com #save the message and its id to the environment object
     return JSON.stringify(com)
 
   buildStreamCommand: (command, stream_session_id, symbols) ->
@@ -38,80 +36,80 @@ class Connector
 
   connect: () ->
     #establish tls connection and handlers
-    @conn._socket = tls.connect(@conn_port, @server_url, @onOpen)
-    @conn._socket.setEncoding('utf-8')
-    @conn.dispatcher = new dispatcher(@conn._socket, 200)
-    @conn.send = (msg) =>
+    @_conn.socket = tls.connect(@conn_port, @server_url, () =>
+      @_emitter.emit('open'))
+    @_conn.socket.setEncoding('utf-8')
+    @_conn.dispatcher = new dispatcher(@_conn.socket, 200)
+    @send = (msg) =>
       #console.log("Sending message: #{msg}")
-      @conn.dispatcher.add(msg)
-    @conn._socket.addListener('data', @onChunk)
-    @conn._socket.addListener('error', @onError)
-    @conn._socket.addListener('close', @onClose)
-    @conn.end = () =>
-      @stream._socket.end() if @stream._socket?
-      @conn._socket.end()
+      @_conn.dispatcher.add(msg)
+    @_conn.socket.addListener('data', @_onChunk)
+    @_conn.socket.addListener('error', () =>
+      @_emitter.emit('error'))
+    @_conn.socket.addListener('close', () =>
+      @_emitter.emit('close'))
     return
 
-  onChunk: (data) =>
+  _onChunk: (data) =>
     #since it is possible to receive multiple responses in one chunk, we have to split it
-    #if the response is a partial msg we just add it to the @msg
+    #if the response is a partial msg we just add it to the @_msg
     responses = data.split('\n\n')
     if responses.length == 1
-      @msg += responses[0]
+      @_msg += responses[0]
     else
       #if the responses contains multiple messages we send them to handler one by one
       responses = (res for res in data.split('\n\n') when res != '')
       for res in responses
-        @msg += res
-        @onMessage(@msg)
-        @msg = ''
+        @_msg += res
+        @_emitter.emit('message', @_msg)
+        @_msg = ''
     return
 
   disconnect: () ->
-    @conn.end()
+    @_conn.socket.end() if @_conn.socket?
     return
 
   connectStream: () ->
-    @stream._socket = tls.connect(@stream_port, @server_url, @onStreamOpen)
-    @stream._socket.setEncoding('utf-8')
-    @stream.dispatcher = new dispatcher(@stream._socket, 200)
-    @stream.send = (msg) =>
+    @_stream.socket = tls.connect(@stream_port, @server_url, () =>
+      @_streamEmitter.emit('open'))
+    @_stream.socket.setEncoding('utf-8')
+    @_stream.dispatcher = new dispatcher(@_stream.socket, 200)
+    @streamSend = (msg) =>
       #console.log("Sending message: #{msg}")
-      @stream.dispatcher.add(msg)
-    @stream._socket.addListener('data', @onStreamChunk)
-    @stream._socket.addListener('error', @onStreamError)
-    @stream._socket.addListener('close', @onStreamClose)
-    @stream.end = () =>
-      @stream._socket.end()
+      @_stream.dispatcher.add(msg)
+    @_stream.socket.addListener('data', @_onStreamChunk)
+    @_stream.socket.addListener('error', () =>
+      @_streamEmitter.emit('error'))
+    @_stream.socket.addListener('close', () =>
+      @_streamEmitter.emit('close'))
     return
 
-  onStreamChunk: (data) =>
+  _onStreamChunk: (data) =>
     #since it is possible to receive multiple responses in one chunk, we have to split it
     responses = data.split('\n\n')
     #partial response, just add the chunk
     if responses.length == 1
-      @stream_msg += responses[0]
+      @_stream_msg += responses[0]
     #multiple responses, handle one by one
     else
       responses = (res for res in responses when res != '')
       for res in responses
-        @stream_msg += res
-        @onStreamMessage(@stream_msg)
-        @stream_msg = ''
+        @_stream_msg += res
+        @_streamEmitter.emit('message', @_stream_msg)
+        @_stream_msg = ''
     return
 
   disconnectStream: () ->
-    @stream.end()
+    @_stream.socket.end() if @_stream.socket?
     return
 
-  resetState: () ->
-    @conn = {}
-    @stream = {}
-    @msg = '' #this is required since data comes in chunks
-    @msg_id = 0 #this will be used to uniquely identify a message
-    @stream_msg = '' #this is for the stream
-    @env =
-      messages: {}
+  on: (event, callback) ->
+    @_emitter.on(event, callback)
+    return
+
+  onStream: (event, callback) ->
+    @_streamEmitter.on(event, callback)
+    return
 
     #fill in onOpen, onMessage, onStreamOpen, onStreamMessage, onError and onStreamError handlers
 

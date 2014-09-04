@@ -24,21 +24,21 @@ The main Connector class. By using it you initialize the client. Example:
 
     client = new Connector(SERVER_URL, CONN_PORT, STREAM_PORT, USERNAME, PASSWORD)
 
-You can then use the client methods and properties to interact with xapi
+You can then use the Connector methods and properties to interact with xapi
 
-###Client.connect()
+###Connector.connect()
 
 Connects to the specified server and conn port
 
-###Client.disconnect()
+###Connector.disconnect()
 
 Disconnects from the server
 
-###Client.send(msg)
+###Connector.send(msg)
 
 Sends a message through the normal connection
 
-###Client.on(event, callback)
+###Connector.on(event, callback)
 
 Registeres a callback for a given event. You can register multiple callback per event
 
@@ -48,19 +48,19 @@ Events:
 - error
 - message
 
-###Client.connectStream()
+###Connector.connectStream()
 
 Connects to the specified stream server
 
-###Client.disconnectStream()
+###Connector.disconnectStream()
 
 Disconnects from the stream server
 
-###Client.streamSend(msg)
+###Connector.streamSend(msg)
 
 Sends a message to the stream server
 
-###Client.onStream(event, callback)
+###Connector.onStream(event, callback)
 
 Registeres a callback for a given stream event. You can register multiple callback per event
 
@@ -70,18 +70,28 @@ Events:
 - error
 - message
 
-###Client.buildCommand(command, [args], [tag])
+###Connector.buildCommand(command, [args], [tag])
 
 Helper function for building xAPI compliant commands. Returns a JSON object.
 
-###Client.buildStreamCommand(command, stream_session_id, [symbols])
+###Connector.buildStreamCommand(command, stream_session_id, [symbols])
 
 Helper function for building xAPI compliant commands. Returns a JSON object.
 
-###Client.getQue()
+###Connector.getQue()
 
-Return the current que of messages to be send by the client
+Return the current que of messages to be send by the Connector
 
-###Client.getStreamQue()
+###Connector.getStreamQue()
 
-Return the current que of messages to be send by the client stream
+Return the current que of messages to be send by the Connector stream
+
+###Connector.server_url
+
+###Connector.conn_port
+
+###Connector.stream.port
+
+###Connector.username
+
+###Connector.password

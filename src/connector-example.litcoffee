@@ -4,7 +4,7 @@ This is a simple example showing how to connect and use the api wrapper.
 
 Import the xapi-connector
 
-    Connector = require('./xapi-connector.js')
+    Connector = require('../lib/xapi-connector.js')
 
 The socket provided by xAPI is not certified but for now lets ignore it
 
@@ -25,10 +25,74 @@ Helper functions
 
 Create new API connector
 
-    api = new Connector(SERVER_URL, CONN_PORT, STREAM_PORT, USERNAME, PASSWORD)
+    client = new Connector(SERVER_URL, CONN_PORT, STREAM_PORT, USERNAME, PASSWORD)
 
+You now have to register callbacks for the events that will be emitted by the Connector. First lets register a callback
+that will handle the 'open' event emitted when connection with the server is established.
+Once connected we will send a login command.
 
-    api.connect()
+    client.on('open', () ->
+      print('Successfuly connected, login in')
+      msg = client.buildCommand('login', {userId: client.username, password: client.password}, 'login')
+      client.send(msg)
+    )
+
+Now we have to register a callback that will handle the 'message' event, triggered once the Connector receives a message
+from the server. We can use the customTag to identify the login command. Once loged in, we will connect to the stream.
+
+    client.on('message', (msg) ->
+      print("Received a message: #{msg}")
+      msg = JSON.parse(msg)
+      if msg.customTag == 'login'
+        if msg.status == true
+          print('Successfuly loged in, connecting to stream')
+          client.stream_session_id = msg.streamSessionId
+          client.connectStream()
+        else
+          print('Login failed')
+      else if msg.customTag == 'logout'
+        client.disconnectStream()
+        client.disconnect()
+    )
+
+Additionaly we can register callbacks to handle the 'error' and 'close events.'
+
+    client.on('error', () ->
+      print('Connection error')
+    )
+
+    client.on('close', () ->
+      print('Connection closed')
+    )
+
+Now lets handle the stream. First register a handler for the 'open' event.
+
+    client.onStream('open', () ->
+      print('Successfuly connected to stream, subscribing to indicators')
+      msg = client.buildStreamCommand('getAccountIndicators', client.stream_session_id)
+      client.streamSend(msg)
+    )
+
+Now lets handle the incoming messages.
+
+    client.onStream('message', (msg) ->
+      print("Received a message from the stream: #{msg}")
+    )
+
+Additionaly we can register callbacks to handle the 'error' and 'close events.'
+
+    client.onStream('error', () ->
+      print('Stream error')
+    )
+
+    client.onStream('close', () ->
+      print('Stream closed')
+    )
+
+Connect the client and check the results!
+
+    client.connect()
     setTimeout(() ->
-      api.conn.send(api.buildCommand('logout', null))
+      msg = client.buildCommand('logout', null, 'logout')
+      client.send(msg)
     ,10000)

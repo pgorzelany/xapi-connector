@@ -1,2 +1,3 @@
 - work on the new api on the new_api branch
-- add constructor params to docs
+- add getQue and getStreamQue to the public methods
+- check whats wrong with the stream (doesn't emit messages)
