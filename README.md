@@ -12,7 +12,7 @@ Node version 0.10 or higher (testes on Node v0.10.30)
 
 ##Example connector usage
 
-![](src/connector-example.litcoffee)
+[See connector example](src/connector-example.litcoffee)
 
 ##Connector Docs (Draft)
 
