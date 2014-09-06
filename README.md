@@ -42,13 +42,16 @@ Registeres a callback for a given event. You can register multiple callbacks per
 
 Events:
 - open: this event is triggered when connection is successfuly established
+
 - close: triggered when the connection is closed
+
 - error: triggered when there is an error in the connection
+
 - message: triggered when the connector received a message from the server. the callback should take one argument (msg) which is a JSON object
 
-    connector.on('message', (msg) ->
-      console.log("Received a message: #{msg}")
-    )
+      connector.on('message', (msg) ->
+        console.log("Received a message: #{msg}")
+      )
 
 ###Connector.connectStream()
 
@@ -67,9 +70,13 @@ Sends a message to the stream server
 Registeres a callback for a given stream event. You can register multiple callback per event
 
 Events:
+
 - open
+
 - close
+
 - error
+
 - message
 
 ###Connector.buildCommand(command, [args], [tag])
