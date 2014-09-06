@@ -20,7 +20,7 @@
   "engines": {
     "node": ">=0.10.0"
   },
-  "main": "./lib/xapi-wrapper.js",
+  "main": "./lib/xapi-connector.js",
   "homepage": "https://github.com/pgorzelany/xapi-connector",
   "bugs": "https://github.com/pgorzelany/xapi-connector/issues",
   "repository": {

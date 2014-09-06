@@ -4,6 +4,7 @@ This is a simple example showing how to connect and use the api wrapper.
 
 Import the xapi-connector
 
+    #Connector = require('xapi-connector')
     Connector = require('../lib/xapi-connector.js')
 
 The socket provided by xAPI is not certified but for now lets ignore it
