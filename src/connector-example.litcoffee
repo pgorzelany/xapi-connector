@@ -89,11 +89,11 @@ Additionaly we can register callbacks to handle the 'error' and 'close events.'
       print('Stream closed')
     )
 
-Connect the client and check the results!
+Connect the client and check the results! After successful login the client will log out of the service after 10s.
 
     client.connect()
     setTimeout(() ->
       print('login out')
       msg = client.buildCommand('logout', null, 'logout')
       client.send(msg)
-    ,5000)
+    ,10000)

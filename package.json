@@ -2,7 +2,17 @@
   "name": "xapi-connector",
   "description": "Simple low level connector for xAPI written in Coffeescript",
   "keywords": [
-    "xAPI"
+    "xAPI",
+    "xTrade Brokers",
+    "xTrade",
+    "Algotraiding",
+    "Stocks",
+    "CFD",
+    "Forex",
+    "ETF",
+    "Indexes",
+    "Stock market",
+    "Stock market api"
   ],
   "author": "Piotr Gorzelany",
   "version": "0.7.0",
