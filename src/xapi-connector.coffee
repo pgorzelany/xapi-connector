@@ -44,8 +44,8 @@ class Connector
       #console.log("Sending message: #{msg}")
       @_conn.dispatcher.add(msg)
     @_conn.socket.addListener('data', @_onChunk)
-    @_conn.socket.addListener('error', () =>
-      @_emitter.emit('error'))
+    @_conn.socket.addListener('error', (err) =>
+      @_emitter.emit('error', err))
     @_conn.socket.addListener('close', () =>
       @_emitter.emit('close'))
     return
@@ -66,7 +66,8 @@ class Connector
     return
 
   disconnect: () ->
-    @_conn.socket.end() if @_conn.socket?
+    #@_conn.socket.end() if @_conn.socket?
+    @_conn.socket.destroy() if @_conn.socket?
     return
 
   connectStream: () ->
@@ -78,8 +79,8 @@ class Connector
       #console.log("Sending message: #{msg}")
       @_stream.dispatcher.add(msg)
     @_stream.socket.addListener('data', @_onStreamChunk)
-    @_stream.socket.addListener('error', () =>
-      @_streamEmitter.emit('error'))
+    @_stream.socket.addListener('error', (err) =>
+      @_streamEmitter.emit('error', err))
     @_stream.socket.addListener('close', () =>
       @_streamEmitter.emit('close'))
     return
@@ -100,7 +101,8 @@ class Connector
     return
 
   disconnectStream: () ->
-    @_stream.socket.end() if @_stream.socket?
+    #@_stream.socket.end() if @_stream.socket?
+    @_stream.socket.destroy() if @_stream.socket?
     return
 
   on: (event, callback) ->

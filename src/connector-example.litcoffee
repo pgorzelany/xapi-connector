@@ -58,8 +58,8 @@ from the server. We can use the customTag to identify the login command. Once lo
 
 Additionaly we can register callbacks to handle the 'error' and 'close events.'
 
-    client.on('error', () ->
-      print('Connection error')
+    client.on('error', (err) ->
+      print("Connection error: #{err}")
     )
 
     client.on('close', () ->
@@ -82,8 +82,8 @@ Now lets handle the incoming messages.
 
 Additionaly we can register callbacks to handle the 'error' and 'close events.'
 
-    client.onStream('error', () ->
-      print('Stream error')
+    client.onStream('error', (err) ->
+      print("Stream error: #{err}")
     )
 
     client.onStream('close', () ->

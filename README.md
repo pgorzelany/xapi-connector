@@ -1,6 +1,7 @@
 ##Overview
 
 Simple async [xAPI 3.0](http://developers.xstore.pro/) connector for [Node.js](http://nodejs.org/) written in [Coffeescript](http://coffeescript.org/).
+For a higher level solution see [xapi-wrapper](https://github.com/pgorzelany/xapi-wrapper)
 
 ##Prerequisites
 
@@ -49,9 +50,11 @@ Events:
 
 - message: triggered when the connector received a message from the server. the callback should take one argument (msg) which is a JSON object
 
+
       connector.on('message', (msg) ->
         console.log("Received a message: #{msg}")
       )
+      
 
 ###Connector.connectStream()
 
