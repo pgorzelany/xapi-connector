@@ -3,19 +3,19 @@
   "description": "Simple low level connector for xAPI written in Coffeescript",
   "keywords": [
     "xAPI",
-    "xTrade Brokers",
-    "xTrade",
-    "Algotraiding",
-    "Stocks",
-    "CFD",
-    "Forex",
-    "ETF",
-    "Indexes",
-    "Stock market",
-    "Stock market api"
+    "xtrade brokers",
+    "xtrade",
+    "algotraiding",
+    "stocks",
+    "cfd",
+    "forex",
+    "etf",
+    "indexes",
+    "stock market",
+    "stock market api"
   ],
   "author": "Piotr Gorzelany",
-  "version": "0.8.0",
+  "version": "0.8.1",
   "license": "MIT",
   "engines": {
     "node": ">=0.10.0"
