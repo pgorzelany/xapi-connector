@@ -1,3 +1,5 @@
+[![NPM Version](https://img.shields.io/npm/v/xapi-connector.svg?style=flat)](https://www.npmjs.org/package/xapi-connector)
+
 ##Overview
 
 Simple async [xAPI 3.0](http://developers.xstore.pro/) connector for [Node.js](http://nodejs.org/) written in [Coffeescript](http://coffeescript.org/).
