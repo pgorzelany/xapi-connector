@@ -4,7 +4,7 @@ The main Connector class. By using it you initialize the client. Example:
 
     connector = new Connector(SERVER_URL, CONN_PORT, STREAM_PORT, USERNAME, PASSWORD)
 
-You can then use the Connector methods and properties to interact with xapi
+You can then use the Connector methods and properties to interact with xapi.
 
 ###Connector.connect()
 
@@ -28,9 +28,11 @@ Events:
 - error: triggered when there is an error in the connection
 - message: triggered when the connector received a message from the server. the callback should take one argument (msg) which is a JSON object
 
-      connector.on('message', (msg) ->
-        console.log("Received a message: #{msg}")
-      )
+
+    connector.on('message', (msg) ->
+      console.log("Received a message: #{msg}")
+    )
+
 
 ###Connector.connectStream()
 
@@ -94,11 +96,10 @@ Should return:
     }
 
 
-Helper function for building xAPI
-
 ###Connector.getQue()
 
-Return the current que (array) of messages to be send by the Connector
+Return the current que (array) of messages to be send by the Connector.
+Since the connector can only send message in 200ms intervals (xAPI constraint), there may be times when there will be more then 1 message in a que.
 
 ###Connector.getStreamQue()
 
