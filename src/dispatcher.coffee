@@ -15,6 +15,7 @@ class Dispatcher
   add: (msg) ->
     @_que.push(msg)
     @_clearQue() if @_clearing_que == false
+    return
 
   getQue: () ->
     return @_que
@@ -32,5 +33,6 @@ class Dispatcher
       if @_que.length > 0 then @_clearQue() else @_clearing_que = false
     else
       setTimeout(@_clearQue.bind(@), @delay + 1 - diff)
+    return
 
 module.exports = Dispatcher

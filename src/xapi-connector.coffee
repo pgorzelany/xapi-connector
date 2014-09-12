@@ -27,11 +27,12 @@ class Connector
     #if tag? then com.customTag = tag else com.customTag = myCustomTag
     return JSON.stringify(com)
 
-  buildStreamCommand: (command, stream_session_id, symbols) ->
+  buildStreamCommand: (command, stream_session_id, args) ->
+    throw new Error('Missing stream command') if not command?
     com =
-      command: if command? then command else throw new Error('Missing command')
-    com.streamSessionId = stream_session_id if stream_session_id?
-    com.symbols = symbols if symbols?
+      command: command
+      streamSessionId: stream_session_id if stream_session_id?
+    com[key] = val for key, val of args if args?
     return JSON.stringify(com)
 
   connect: () ->

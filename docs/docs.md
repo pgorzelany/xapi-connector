@@ -59,9 +59,42 @@ Events:
 
 Helper function for building xAPI compliant commands. Returns a JSON object.
 
-###Connector.buildStreamCommand(command, stream_session_id, [symbols])
+Example:
 
-Helper function for building xAPI compliant commands. Returns a JSON object.
+    connector.buildCommand('login', {userId: '123456', password: 'pass'}, 'tag')
+
+Should return:
+
+    {
+    	"command": "login",
+    	"arguments": {
+    		"userId": "123456",
+    		"password": "pass",
+    	},
+      "customTag": "tag"
+    }
+
+###Connector.buildStreamCommand(command, stream_session_id, [args])
+
+Since the format of a stream command is not standard, the user can pass the args object.
+Each property and value of args will be added to the returned JSON object.
+
+Example:
+
+    connector.buildStreamCommand('getCandles', '8469308861804289383', {symbol: 'EURUSD', onlyComplete: true, period: 5})
+
+Should return:
+
+    {
+    	"command": "getCandles",
+    	"streamSessionId": "8469308861804289383",
+    	"symbol": "EURUSD",
+    	"onlyComplete": true,
+    	"period": 5
+    }
+
+
+Helper function for building xAPI
 
 ###Connector.getQue()
 

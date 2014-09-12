@@ -17,4 +17,6 @@ Node version 0.10 or higher (testes on Node v0.10.30)
 
 ##Connector Docs (Draft)
 
+From version 1.0 this module will use [semantic versioning](http://semver.org/) (the api will be backwards compatible)
+
 [See docs](docs/docs.md)
