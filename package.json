@@ -15,7 +15,7 @@
     "stock market api"
   ],
   "author": "Piotr Gorzelany",
-  "version": "0.8.1",
+  "version": "0.8.2",
   "license": "MIT",
   "engines": {
     "node": ">=0.10.0"
@@ -29,6 +29,9 @@
   },
   "dependencies": {
     "coffee-script": "1.x"
+  },
+  "devDependencies": {
+    "mocha": "1.x"
   },
   "scripts": {
     "prepublish": "coffee -o lib/ -c src/"

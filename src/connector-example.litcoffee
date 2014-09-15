@@ -1,6 +1,6 @@
 ##Example usage
 
-This is a simple example showing how to connect and use the api wrapper.
+This is a simple example showing how to connect and use the api connector.
 
 Import the xapi-connector
 
